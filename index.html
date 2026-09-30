@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f7f1">
+    <meta name="description" content="Luhur Fit: hitung kalori, temukan informasi obat yang tepercaya, dan baca artikel kesehatan untuk kebiasaan hidup lebih baik.">
+    <title>Luhur Fit — Teman sehat setiap hari</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #20332d;
+            --muted: #73817a;
+            --paper: #f4f7f1;
+            --white: #fff;
+            --green: #245c47;
+            --green-dark: #193d32;
+            --green-light: #e5eee6;
+            --lime: #d5ed92;
+            --coral: #e98268;
+            --line: #e6ebe4;
+            --serif: Georgia, 'Times New Roman', serif;
+            --sans: 'DM Sans', sans-serif;
+            --display: 'Manrope', sans-serif;
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+        body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+        button, input, select { font: inherit; }
+        button, a { -webkit-tap-highlight-color: transparent; }
+        a { color: inherit; text-decoration: none; }
+        button { color: inherit; }
+        .shell { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+        .site-header { height: 76px; position: sticky; z-index: 20; top: 0; background: rgba(244,247,241,.94); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(32,51,45,.08); }
+        .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+        .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 20px; font-weight: 800; letter-spacing: 0; white-space: nowrap; }
+        .brand-mark { display: grid; place-items: center; width: 36px; height: 36px; color: var(--lime); background: var(--green-dark); border-radius: 12px 12px 12px 4px; }
+        .brand-mark svg { width: 21px; height: 21px; }
+        .brand span:last-child { color: var(--green); }
+        .main-nav { display: flex; align-items: center; gap: 7px; }
+        .main-nav a { padding: 9px 14px; color: #66766e; font-size: 14px; font-weight: 600; border-radius: 999px; transition: color .2s, background .2s; }
+        .main-nav a:hover, .main-nav a[aria-current="location"] { color: var(--green-dark); background: #e8eee5; }
+        .header-note { display: flex; align-items: center; gap: 8px; color: #6b7b72; font-size: 12px; white-space: nowrap; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #84b56b; box-shadow: 0 0 0 4px #e5eee1; }
+        .hero { display: grid; grid-template-columns: 1.05fr .95fr; min-height: 410px; margin-top: 32px; overflow: hidden; background: #e7eee5; border-radius: 8px; }
+        .hero-copy { padding: 52px 48px 44px; align-self: center; }
+        .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 17px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+        .eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--coral); }
+        h1, h2, h3, p { margin-top: 0; }
+        .hero h1 { max-width: 480px; margin-bottom: 15px; font-family: var(--display); font-size: clamp(34px, 4vw, 51px); line-height: 1.08; font-weight: 700; letter-spacing: 0; }
+        .hero h1 em { color: var(--green); font-family: var(--serif); font-weight: 400; }
+        .hero-copy > p:not(.eyebrow) { max-width: 420px; margin-bottom: 25px; color: #5f7068; font-size: 15px; }
+        .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 45px; padding: 0 18px; border: 0; border-radius: 5px; background: var(--green); color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: background .2s, transform .2s; }
+        .button:hover { background: var(--green-dark); transform: translateY(-1px); }
+        .button svg { width: 16px; height: 16px; }
+        .button-quiet { color: var(--green-dark); background: transparent; }
+        .button-quiet:hover { color: var(--green); background: rgba(36,92,71,.07); }
+        .hero-photo { position: relative; min-height: 410px; background: #bdcdbb; }
+        .hero-photo img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; object-position: center 46%; }
+        .photo-label { position: absolute; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 11px; padding: 12px 15px; background: rgba(255,255,255,.94); border-radius: 5px; box-shadow: 0 8px 30px rgba(26,48,37,.1); }
+        .photo-label .label-icon { width: 35px; height: 35px; display: grid; place-items: center; color: var(--green); background: var(--green-light); border-radius: 50%; }
+        .photo-label svg { width: 17px; height: 17px; }
+        .photo-label strong { display: block; font-family: var(--display); font-size: 13px; }
+        .photo-label span { display: block; color: var(--muted); font-size: 11px; }
+        .quick-strip { display: grid; grid-template-columns: repeat(3, 1fr); margin: 17px 0 54px; background: var(--white); border: 1px solid var(--line); border-radius: 6px; }
+        .quick-item { display: flex; align-items: center; gap: 13px; padding: 15px 21px; }
+        .quick-item + .quick-item { border-left: 1px solid var(--line); }
+        .quick-icon { width: 38px; height: 38px; display: grid; place-items: center; color: var(--green); background: #edf3e9; border-radius: 50%; flex: none; }
+        .quick-icon svg { width: 18px; height: 18px; }
+        .quick-item strong { display: block; font-size: 13px; font-weight: 700; }
+        .quick-item span { display: block; color: var(--muted); font-size: 12px; }
+        .section { padding: 53px 0 62px; border-top: 1px solid #e2e8df; }
+        .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+        .section-heading .eyebrow { margin-bottom: 9px; }
+        .section-heading h2 { margin-bottom: 6px; font-family: var(--display); font-size: 31px; line-height: 1.2; letter-spacing: 0; }
+        .section-heading p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 14px; }
+        .section-number { color: #c1cec3; font-family: var(--serif); font-size: 37px; }
+        .calorie-layout { display: grid; grid-template-columns: 1.2fr .8fr; gap: 20px; align-items: stretch; }
+        .panel { background: var(--white); border: 1px solid var(--line); border-radius: 6px; }
+        .calculator-panel { padding: 24px; }
+        .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 21px; }
+        .panel-title h3 { margin: 0; font-family: var(--display); font-size: 16px; }
+        .panel-title span { color: var(--muted); font-size: 12px; }
+        .food-form { display: grid; grid-template-columns: minmax(0, 1fr) 115px auto; align-items: end; gap: 12px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+        .field label { display: block; margin-bottom: 7px; color: #68776f; font-size: 12px; font-weight: 600; }
+        .field input, .field select, .search-input { width: 100%; height: 43px; padding: 0 12px; color: var(--ink); background: #fbfcfa; border: 1px solid #dfe6de; border-radius: 4px; outline: none; }
+        .field input:focus, .field select:focus, .search-input:focus { border-color: #729a7a; box-shadow: 0 0 0 3px rgba(114,154,122,.13); }
+        .food-form .button { height: 43px; min-height: 43px; padding: 0 14px; white-space: nowrap; }
+        .food-list { min-height: 127px; }
+        .food-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto 30px; align-items: center; gap: 13px; padding: 13px 2px; border-bottom: 1px solid #f0f2ef; }
+        .food-row:last-child { border-bottom: 0; }
+        .food-name { font-size: 13px; font-weight: 700; }
+        .food-portion { display: block; color: var(--muted); font-size: 11px; font-weight: 400; }
+        .food-energy { color: var(--green); font-family: var(--display); font-size: 13px; font-weight: 800; white-space: nowrap; }
+        .icon-button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 4px; color: #829087; background: transparent; cursor: pointer; }
+        .icon-button:hover { color: #a84f3c; background: #fff0eb; }
+        .icon-button svg { width: 15px; height: 15px; }
+        .empty-state { display: grid; min-height: 127px; place-items: center; color: #8a978e; font-size: 13px; text-align: center; }
+        .summary-panel { display: flex; flex-direction: column; justify-content: space-between; padding: 25px; color: white; background: var(--green-dark); border: 0; }
+        .summary-panel .panel-title span { color: #b7c8bc; }
+        .summary-panel .panel-title h3 { color: white; }
+        .calorie-total { margin: 4px 0 22px; }
+        .calorie-total strong { font-family: var(--display); font-size: 45px; line-height: 1; letter-spacing: 0; }
+        .calorie-total span { margin-left: 6px; color: #c4d4c9; font-size: 13px; }
+        .progress-meta { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 9px; color: #c4d4c9; font-size: 11px; }
+        .progress-track { height: 8px; overflow: hidden; background: rgba(255,255,255,.18); border-radius: 99px; }
+        .progress-fill { width: 0; height: 100%; background: var(--lime); border-radius: inherit; transition: width .35s ease; }
+        .goal-control { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 15px; color: #c4d4c9; font-size: 12px; }
+        .goal-control input { width: 78px; height: 32px; padding: 0 8px; color: white; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.28); border-radius: 4px; }
+        .summary-hint { margin: 23px 0 0; padding-top: 16px; color: #d3e0d7; border-top: 1px solid rgba(255,255,255,.15); font-size: 12px; }
+        .medical-note { display: flex; align-items: start; gap: 11px; margin-top: 18px; padding: 14px 16px; color: #69786f; background: #edf2e9; border-left: 3px solid #9db584; font-size: 12px; }
+        .medical-note svg { width: 17px; height: 17px; color: var(--green); flex: none; }
+        .medicine-section { background: #edf2e9; }
+        .medicine-toolbar { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+        .search-wrap { position: relative; flex: 1; max-width: 440px; }
+        .search-wrap svg { position: absolute; width: 17px; height: 17px; top: 13px; left: 13px; color: #84928a; }
+        .search-wrap input { padding-left: 40px; background: white; }
+        .toolbar-note { color: #78867c; font-size: 12px; }
+        .medicine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .medicine-card { min-height: 181px; padding: 19px; background: white; border: 1px solid #e2e9df; border-radius: 5px; }
+        .medicine-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .medicine-icon { width: 37px; height: 37px; display: grid; place-items: center; color: var(--green); background: #edf3e9; border-radius: 50%; }
+        .medicine-icon svg { width: 18px; height: 18px; }
+        .tag { padding: 5px 8px; color: #667a67; background: #eff3eb; border-radius: 3px; font-size: 10px; font-weight: 700; }
+        .tag-prescription { color: #94503e; background: #fbede7; }
+        .medicine-card h3 { margin-bottom: 6px; font-family: var(--display); font-size: 15px; }
+        .medicine-card p { margin: 0; color: #718077; font-size: 12px; line-height: 1.55; }
+        .medicine-empty { grid-column: 1 / -1; padding: 30px; text-align: center; color: var(--muted); }
+        .safety-banner { display: flex; align-items: flex-start; gap: 13px; margin-top: 19px; padding: 17px 19px; color: #694b3e; background: #fff8ed; border: 1px solid #f4e8d7; border-radius: 5px; }
+        .safety-banner svg { width: 19px; height: 19px; flex: none; color: #bd7957; }
+        .safety-banner strong { display: block; margin-bottom: 2px; font-size: 13px; }
+        .safety-banner p { margin: 0; color: #806b5d; font-size: 12px; }
+        .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 21px; }
+        .filter-button { min-height: 34px; padding: 0 13px; color: #63736a; background: transparent; border: 1px solid #dce4da; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .2s; }
+        .filter-button:hover, .filter-button[aria-pressed="true"] { color: white; background: var(--green); border-color: var(--green); }
+        .article-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .article-card { overflow: hidden; background: white; border: 1px solid var(--line); border-radius: 5px; transition: transform .2s, box-shadow .2s; }
+        .article-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(34,56,42,.08); }
+        .article-card[hidden] { display: none; }
+        .article-image { width: 100%; aspect-ratio: 1.72; display: block; object-fit: cover; background: #e2e9dd; }
+        .article-copy { padding: 17px 17px 18px; }
+        .article-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; color: #8a958d; font-size: 10px; }
+        .article-meta span:first-child { color: var(--green); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; }
+        .article-card h3 { min-height: 47px; margin-bottom: 9px; font-family: var(--display); font-size: 16px; line-height: 1.45; }
+        .article-card p { min-height: 39px; margin-bottom: 15px; color: #718077; font-size: 12px; }
+        .read-link { display: inline-flex; align-items: center; gap: 6px; padding: 0; color: var(--green); background: none; border: 0; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .read-link svg { width: 14px; height: 14px; transition: transform .2s; }
+        .read-link:hover svg { transform: translateX(3px); }
+        .article-empty { grid-column: 1 / -1; padding: 30px; text-align: center; color: var(--muted); }
+        .footer { padding: 26px 0; color: #748179; border-top: 1px solid #e2e8df; font-size: 12px; }
+        .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+        .footer .brand { color: var(--green); font-size: 15px; }
+        .footer .brand-mark { width: 28px; height: 28px; border-radius: 9px 9px 9px 3px; }
+        .footer .brand-mark svg { width: 16px; height: 16px; }
+        .modal-backdrop { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(21,39,31,.56); }
+        .modal-backdrop[hidden] { display: none; }
+        .article-modal { position: relative; width: min(620px, 100%); max-height: min(82vh, 760px); overflow-y: auto; padding: 32px; background: white; border-radius: 7px; box-shadow: 0 24px 80px rgba(10,24,16,.28); }
+        .modal-close { position: absolute; top: 13px; right: 13px; }
+        .article-modal h2 { padding-right: 24px; margin: 8px 0 11px; font-family: var(--display); font-size: 27px; line-height: 1.25; }
+        .modal-meta { margin-bottom: 20px; color: var(--muted); font-size: 12px; }
+        .modal-body { color: #586960; font-size: 14px; line-height: 1.8; }
+        .modal-body p { margin-bottom: 15px; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        @media (max-width: 800px) {
+            .shell { width: min(100% - 32px, 680px); }
+            .header-note { display: none; }
+            .hero { grid-template-columns: 1fr .8fr; min-height: 350px; }
+            .hero-copy { padding: 35px 27px; }
+            .hero-photo { min-height: 350px; }
+            .quick-item { padding: 13px 12px; gap: 9px; }
+            .quick-icon { width: 33px; height: 33px; }
+            .calorie-layout { grid-template-columns: 1fr; }
+            .summary-panel { min-height: 250px; }
+            .medicine-grid, .article-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 560px) {
+            html { scroll-padding-top: 128px; }
+            .shell { width: calc(100% - 28px); }
+            .site-header { height: auto; }
+            .header-inner { min-height: 62px; flex-wrap: wrap; gap: 4px; padding: 8px 0 0; }
+            .brand { font-size: 18px; }
+            .brand-mark { width: 32px; height: 32px; }
+            .main-nav { width: 100%; justify-content: space-between; gap: 0; overflow-x: auto; }
+            .main-nav a { padding: 8px 10px 10px; font-size: 12px; white-space: nowrap; }
+            .hero { display: flex; flex-direction: column; margin-top: 17px; }
+            .hero-copy { padding: 30px 23px 27px; }
+            .hero h1 { max-width: 370px; font-size: 37px; }
+            .hero-copy > p:not(.eyebrow) { font-size: 14px; }
+            .hero-photo { min-height: 205px; }
+            .hero-photo img { object-position: center 50%; }
+            .photo-label { right: 12px; bottom: 12px; padding: 9px 11px; }
+            .quick-strip { grid-template-columns: 1fr; margin: 12px 0 36px; }
+            .quick-item { padding: 11px 15px; }
+            .quick-item + .quick-item { border-left: 0; border-top: 1px solid var(--line); }
+            .quick-icon { width: 34px; height: 34px; }
+            .section { padding: 39px 0 45px; }
+            .section-heading { margin-bottom: 21px; }
+            .section-heading h2 { font-size: 27px; }
+            .section-heading p:not(.eyebrow) { font-size: 13px; }
+            .section-number { font-size: 29px; }
+            .calculator-panel, .summary-panel { padding: 19px; }
+            .food-form { grid-template-columns: minmax(0, 1fr) 92px; gap: 10px; }
+            .food-form .button { grid-column: 1 / -1; width: 100%; }
+            .food-row { gap: 7px; }
+            .medicine-grid, .article-grid { grid-template-columns: 1fr; }
+            .medicine-card { min-height: auto; }
+            .medicine-toolbar { align-items: flex-start; flex-direction: column; }
+            .search-wrap { width: 100%; max-width: none; }
+            .toolbar-note { font-size: 11px; }
+            .article-image { aspect-ratio: 1.95; }
+            .article-card h3, .article-card p { min-height: auto; }
+            .footer-inner { align-items: flex-start; flex-direction: column; }
+            .article-modal { padding: 26px 21px; }
+            .article-modal h2 { font-size: 23px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="shell header-inner">
+            <a class="brand" href="#beranda" aria-label="Luhur Fit, ke beranda">
+                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/><path d="M12 15V9m-3 3h6"/></svg></span>
+                <span>Luhur <span>Fit</span></span>
+            </a>
+            <nav class="main-nav" aria-label="Navigasi utama">
+                <a href="#beranda" aria-current="location">Beranda</a>
+                <a href="#kalori">Hitung kalori</a>
+                <a href="#obat">Info obat</a>
+                <a href="#artikel">Artikel</a>
+            </nav>
+            <div class="header-note"><span class="status-dot"></span>Teman sehat setiap hari</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="shell">
+            <section class="hero" id="beranda" aria-labelledby="hero-title">
+                <div class="hero-copy">
+                    <p class="eyebrow">Ruang kecil untuk hidup lebih baik</p>
+                    <h1 id="hero-title">Sehat dimulai dari pilihan <em>kecil.</em></h1>
+                    <p>Kenali asupanmu, cari informasi kesehatan yang tepat, dan bangun kebiasaan baik dengan langkah yang terasa ringan.</p>
+                    <div class="hero-actions">
+                        <a class="button" href="#kalori">Mulai hitung kalori <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+                        <a class="button button-quiet" href="#artikel">Jelajahi artikel</a>
+                    </div>
+                </div>
+                <div class="hero-photo">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Seseorang melakukan peregangan di studio yang terang" fetchpriority="high">
+                    <div class="photo-label">
+                        <span class="label-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.36-6.36-2.12 2.12M7.76 16.24l-2.12 2.12m12.72 0-2.12-2.12M7.76 7.76 5.64 5.64"/><circle cx="12" cy="12" r="4"/></svg></span>
+                        <span><strong>Mulai dari dirimu</strong><span>Progres kecil tetap berarti</span></span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="quick-strip" aria-label="Fitur Luhur Fit">
+                <a class="quick-item" href="#kalori"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18l-2 13H5L3 7Z"/><path d="M8 7a4 4 0 0 1 8 0M8 12h.01M12 12h.01M16 12h.01"/></svg></span><span><strong>Hitung asupan</strong><span>Kenali kalori makananmu</span></span></a>
+                <a class="quick-item" href="#obat"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m10.5 20.5 10-10a5 5 0 0 0-7-7l-10 10a5 5 0 0 0 7 7Z"/><path d="m8 8 8 8"/></svg></span><span><strong>Kenali obat</strong><span>Pahami sebelum menggunakan</span></span></a>
+                <a class="quick-item" href="#artikel"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21V5.5Z"/><path d="M4 17a2.5 2.5 0 0 1 2.5-2.5H20M8 7h8m-8 3h7"/></svg></span><span><strong>Baca &amp; belajar</strong><span>Artikel kesehatan pilihan</span></span></a>
+            </div>
+        </div>
+
+        <section class="section" id="kalori" aria-labelledby="calorie-title">
+            <div class="shell">
+                <div class="section-heading">
+                    <div><p class="eyebrow">01 / Nutrisi</p><h2 id="calorie-title">Hitung kalori makanan</h2><p>Tambahkan makanan dan porsinya untuk melihat perkiraan asupan hari ini.</p></div>
+                    <span class="section-number" aria-hidden="true">01</span>
+                </div>
+                <div class="calorie-layout">
+                    <div class="panel calculator-panel">
+                        <div class="panel-title"><h3>Catatan makan hari ini</h3><span id="today-label"></span></div>
+                        <form id="food-form" class="food-form">
+                            <div class="field"><label for="food-select">Pilih makanan</label><select id="food-select" required></select></div>
+                            <div class="field"><label for="food-grams">Porsi (gram)</label><input id="food-grams" type="number" min="1" max="2000" value="150" required inputmode="numeric"></div>
+                            <button class="button" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>Tambah</button>
+                        </form>
+                        <div class="food-list" id="food-list" aria-live="polite"></div>
+                    </div>
+                    <aside class="panel summary-panel" aria-label="Ringkasan kalori">
+                        <div>
+                            <div class="panel-title"><h3>Total asupan</h3><span>Perkiraan hari ini</span></div>
+                            <div class="calorie-total"><strong id="calorie-total">0</strong><span>kkal</span></div>
+                            <div class="progress-meta"><span>Asupan tercatat</span><span id="goal-label">dari 2.000 kkal</span></div>
+                            <div class="progress-track" role="progressbar" aria-label="Persentase asupan kalori terhadap target" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progress-fill"></div></div>
+                            <label class="goal-control" for="calorie-goal"><span>Target harian pribadi</span><input id="calorie-goal" type="number" min="500" max="10000" step="50" value="2000" inputmode="numeric"></label>
+                        </div>
+                        <p class="summary-hint" id="summary-hint">Tambahkan makanan untuk mulai memantau asupanmu.</p>
+                    </aside>
+                </div>
+                <div class="medical-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg><span>Angka kalori adalah perkiraan dan dapat berbeda menurut bahan serta cara pengolahan. Kebutuhan energi tiap orang berbeda; konsultasikan target gizi dengan tenaga kesehatan.</span></div>
+            </div>
+        </section>
+
+        <section class="section medicine-section" id="obat" aria-labelledby="medicine-title">
+            <div class="shell">
+                <div class="section-heading">
+                    <div><p class="eyebrow">02 / Informasi tepercaya</p><h2 id="medicine-title">Panduan resep &amp; obat</h2><p>Kenali informasi dasar obat, lalu tanyakan pilihan yang sesuai kepada tenaga kesehatan.</p></div>
+                    <span class="section-number" aria-hidden="true">02</span>
+                </div>
+                <div class="medicine-toolbar">
+                    <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><label class="sr-only" for="medicine-search">Cari informasi obat</label><input class="search-input" id="medicine-search" type="search" placeholder="Cari nama obat atau kegunaannya..."></div>
+                    <span class="toolbar-note">Informasi umum, bukan pengganti resep atau pemeriksaan dokter.</span>
+                </div>
+                <div class="medicine-grid" id="medicine-grid"></div>
+                <div class="safety-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 3.5 7v5c0 5 3.5 8 8.5 9 5-1 8.5-4 8.5-9V7L12 3Z"/><path d="M12 8v5m0 3h.01"/></svg><div><strong>Obat resep harus ditentukan oleh dokter.</strong><p>Luhur Fit tidak mendiagnosis, meresepkan, atau menyarankan dosis. Jangan memulai, menghentikan, atau berbagi obat resep tanpa arahan tenaga kesehatan. Periksa kemasan dan tanyakan apoteker bila ragu.</p></div></div>
+            </div>
+        </section>
+
+        <section class="section" id="artikel" aria-labelledby="article-title">
+            <div class="shell">
+                <div class="section-heading">
+                    <div><p class="eyebrow">03 / Wawasan sehat</p><h2 id="article-title">Baca untuk lebih sehat</h2><p>Bekal pengetahuan ringan untuk menemani rutinitasmu.</p></div>
+                    <span class="section-number" aria-hidden="true">03</span>
+                </div>
+                <div class="filter-row" role="group" aria-label="Filter kategori artikel">
+                    <button class="filter-button" type="button" data-filter="Semua" aria-pressed="true">Semua</button>
+                    <button class="filter-button" type="button" data-filter="Nutrisi" aria-pressed="false">Nutrisi</button>
+                    <button class="filter-button" type="button" data-filter="Aktivitas" aria-pressed="false">Aktivitas</button>
+                    <button class="filter-button" type="button" data-filter="Istirahat" aria-pressed="false">Istirahat</button>
+                </div>
+                <div class="article-grid" id="article-grid"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer"><div class="shell footer-inner"><a class="brand" href="#beranda"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/><path d="M12 15V9m-3 3h6"/></svg></span>Luhur Fit</a><span>Informasi di situs ini bersifat edukatif dan bukan pengganti saran medis profesional.</span><span>&copy; <span id="year"></span> Luhur Fit</span></div></footer>
+
+    <div class="modal-backdrop" id="article-modal" hidden>
+        <article class="article-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <button class="icon-button modal-close" id="modal-close" type="button" aria-label="Tutup artikel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+            <p class="eyebrow" id="modal-category"></p><h2 id="modal-title"></h2><p class="modal-meta" id="modal-meta"></p><div class="modal-body" id="modal-body"></div>
+        </article>
+    </div>
+
+    <script>
+        const foods = [
+            { name: 'Nasi putih', calories: 130 }, { name: 'Nasi merah', calories: 111 },
+            { name: 'Dada ayam tanpa kulit', calories: 165 }, { name: 'Telur ayam', calories: 155 },
+            { name: 'Tempe', calories: 193 }, { name: 'Tahu putih', calories: 76 },
+            { name: 'Pisang', calories: 89 }, { name: 'Alpukat', calories: 160 },
+            { name: 'Oatmeal', calories: 68 }, { name: 'Bayam', calories: 23 },
+            { name: 'Ikan salmon', calories: 208 }, { name: 'Kentang rebus', calories: 87 },
+            { name: 'Apel', calories: 52 }, { name: 'Yoghurt tawar', calories: 61 }
+        ];
+        const medicines = [
+            { name: 'Parasetamol', tag: 'Obat bebas', type: 'nonresep', icon: 'pill', keywords: 'nyeri demam', description: 'Umumnya digunakan untuk membantu meredakan nyeri ringan dan demam. Periksa aturan pada kemasan; penggunaan berlebihan dapat membahayakan hati.' },
+            { name: 'Antasida', tag: 'Obat bebas', type: 'nonresep', icon: 'stomach', keywords: 'maag asam lambung', description: 'Dapat membantu meredakan keluhan asam lambung sesekali. Tanyakan apoteker mengenai jarak penggunaan dengan obat lain.' },
+            { name: 'Oralit', tag: 'Obat bebas terbatas', type: 'nonresep', icon: 'drop', keywords: 'diare cairan dehidrasi', description: 'Larutan rehidrasi oral membantu mengganti cairan dan elektrolit yang hilang. Larutkan sesuai petunjuk kemasan; cari bantuan medis bila gejala berat.' },
+            { name: 'Antibiotik', tag: 'Wajib resep dokter', type: 'resep', icon: 'shield', keywords: 'infeksi bakteri', description: 'Digunakan untuk infeksi bakteri tertentu berdasarkan pemeriksaan dokter. Tidak mengobati flu atau infeksi virus; jangan menggunakan sisa antibiotik.' },
+            { name: 'Obat tekanan darah', tag: 'Wajib resep dokter', type: 'resep', icon: 'heart', keywords: 'hipertensi jantung', description: 'Jenis obat dipilih dokter sesuai kondisi, hasil pemeriksaan, dan obat lain yang digunakan. Jangan mengubah dosis atau menghentikannya sendiri.' },
+            { name: 'Obat alergi', tag: 'Tergantung jenis', type: 'resep', icon: 'spark', keywords: 'alergi gatal antihistamin', description: 'Pilihan terapi bergantung pada gejala dan jenis obat. Sebagian dapat menyebabkan kantuk; baca label dan tanyakan tenaga kesehatan.' }
+        ];
+        const articles = [
+            { id: 'piring', category: 'Nutrisi', read: '4 menit baca', title: 'Mengenal isi piring makan yang seimbang', excerpt: 'Panduan sederhana menyusun menu harian yang beragam dan bernutrisi.', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80', alt: 'Semangkuk sayuran segar aneka warna', body: ['Makan seimbang bukan soal satu bahan makanan yang sempurna, melainkan variasi yang dinikmati sepanjang hari. Coba isi sebagian besar piring dengan sayur dan buah, lalu lengkapi dengan sumber protein serta makanan pokok.', 'Pilih variasi warna dan sumber protein, misalnya tempe, telur, ikan, atau kacang-kacangan. Air putih juga bagian penting dari rutinitas makan.', 'Kebutuhan setiap orang berbeda. Panduan ini bersifat umum; konsultasikan dengan dokter atau ahli gizi untuk kebutuhan khusus.'] },
+            { id: 'gerak', category: 'Aktivitas', read: '3 menit baca', title: 'Gerak ringan yang mudah masuk ke rutinitas', excerpt: 'Tidak harus langsung berat: mulai dari gerakan kecil yang konsisten.', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80', alt: 'Seseorang berolahraga dengan gerakan peregangan', body: ['Aktivitas fisik bisa dimulai dari hal yang dekat: berjalan kaki, memilih tangga, atau peregangan singkat di sela pekerjaan. Pilih kegiatan yang terasa nyaman agar lebih mudah dilakukan secara rutin.', 'Mulailah bertahap dan beri tubuh waktu beradaptasi. Hentikan aktivitas bila terasa nyeri atau tidak nyaman; bila memiliki kondisi kesehatan tertentu, konsultasikan rencana aktivitas kepada tenaga kesehatan.', 'WHO menganjurkan orang dewasa melakukan aktivitas fisik secara rutin. Jumlah dan intensitas yang tepat dapat berbeda menurut kondisi masing-masing.'] },
+            { id: 'tidur', category: 'Istirahat', read: '5 menit baca', title: 'Kebiasaan malam untuk tidur lebih berkualitas', excerpt: 'Rutinitas sederhana dapat membantu tubuh bersiap untuk beristirahat.', image: 'https://images.unsplash.com/photo-1511295742362-92c96b5a8f28?auto=format&fit=crop&w=900&q=80', alt: 'Kamar tidur yang tenang dengan cahaya alami lembut', body: ['Waktu tidur yang teratur membantu membangun ritme harian. Coba buat rutinitas menjelang tidur yang menenangkan, redupkan cahaya, dan sisihkan waktu untuk beristirahat dari layar.', 'Kafein pada sore atau malam hari dapat mengganggu tidur bagi sebagian orang. Perhatikan pola yang paling cocok untuk tubuhmu dan buat kamar tetap nyaman.', 'Gangguan tidur yang berlangsung lama atau memengaruhi aktivitas sehari-hari layak dibicarakan dengan tenaga kesehatan.'] },
+            { id: 'hidrasi', category: 'Nutrisi', read: '3 menit baca', title: 'Cara sederhana menjaga kebutuhan cairan', excerpt: 'Kenali kebiasaan minum yang membantu menemani aktivitas sehari-hari.', image: 'https://images.unsplash.com/photo-1532634896-26909d0d4b86?auto=format&fit=crop&w=900&q=80', alt: 'Segelas air putih segar di atas meja', body: ['Kebutuhan cairan dipengaruhi aktivitas, cuaca, makanan, dan kondisi tubuh. Membawa botol minum atau minum bersama waktu makan bisa membantu membentuk kebiasaan.', 'Air putih dapat menjadi pilihan utama. Jangan menunggu haus berat, terutama saat beraktivitas di cuaca panas. Orang dengan pembatasan cairan dari dokter perlu mengikuti anjuran tersebut.', 'Bila mengalami tanda dehidrasi atau merasa tidak sehat, hubungi tenaga kesehatan.'] },
+            { id: 'jalan', category: 'Aktivitas', read: '4 menit baca', title: 'Mulai rutin berjalan kaki tanpa target berat', excerpt: 'Buat kebiasaan bergerak terasa lebih menyenangkan dan realistis.', image: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=900&q=80', alt: 'Seseorang berjalan di jalur taman yang hijau', body: ['Berjalan kaki mudah disesuaikan dengan keseharian. Pilih rute yang nyaman, mulai dengan durasi yang realistis, lalu tingkatkan sedikit demi sedikit bila tubuh terasa siap.', 'Mendengarkan musik, berjalan bersama teman, atau memilih tujuan yang menyenangkan dapat membuat rutinitas lebih mudah dijaga. Alas kaki yang nyaman juga membantu.', 'Sesuaikan aktivitas dengan kondisi tubuh dan cari saran profesional bila memiliki keluhan kesehatan.'] },
+            { id: 'stres', category: 'Istirahat', read: '4 menit baca', title: 'Sediakan jeda singkat di tengah hari sibuk', excerpt: 'Berhenti sejenak dapat menjadi bentuk perhatian sederhana pada diri sendiri.', image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80', alt: 'Seseorang duduk tenang menikmati jeda', body: ['Saat hari terasa padat, jeda singkat dapat membantu memberi ruang untuk bernapas dan mengenali kebutuhan diri. Coba berdiri sejenak, meregangkan tubuh, atau mengambil napas perlahan.', 'Jeda bukan pengganti istirahat yang cukup atau dukungan profesional. Bila stres terasa berat dan berlangsung lama, berbicara dengan tenaga kesehatan mental adalah langkah yang baik.', 'Mulai dari satu jeda kecil yang cocok dengan jadwalmu hari ini.'] }
+        ];
+        const iconPaths = {
+            pill: '<path d="m10.5 20.5 10-10a5 5 0 0 0-7-7l-10 10a5 5 0 0 0 7 7Z"/><path d="m8 8 8 8"/>',
+            stomach: '<path d="M9 3v5a3 3 0 0 0 6 0V6h2a3 3 0 0 1 3 3v4a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7V9a3 3 0 0 1 3-3h2"/>',
+            drop: '<path d="M12 22a7 7 0 0 0 7-7c0-4-7-13-7-13S5 11 5 15a7 7 0 0 0 7 7Z"/><path d="M9 15a3 3 0 0 0 3 3"/>',
+            shield: '<path d="M12 3 3.5 7v5c0 5 3.5 8 8.5 9 5-1 8.5-4 8.5-9V7L12 3Z"/><path d="m9 12 2 2 4-4"/>',
+            heart: '<path d="M20.8 8.6c0 5.5-8.8 10.4-8.8 10.4S3.2 14.1 3.2 8.6A4.6 4.6 0 0 1 12 6.2a4.6 4.6 0 0 1 8.8 2.4Z"/><path d="M3 12h4l2-3 3 6 2-3h7"/>',
+            spark: '<path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z"/><path d="m19 14 1.2 2.8L23 18l-2.8 1.2L19 22l-1.2-2.8L15 18l2.8-1.2L19 14Z"/>'
+        };
+        const icon = (path) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${path}</svg>`;
+        const foodSelect = document.querySelector('#food-select');
+        const foodList = document.querySelector('#food-list');
+        const goalInput = document.querySelector('#calorie-goal');
+        const storageKey = `luhur-fit-foods-${new Date().toLocaleDateString('sv-SE')}`;
+        let entries = [];
+        try { entries = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch { entries = []; }
+
+        foodSelect.innerHTML = foods.map((food, index) => `<option value="${index}">${food.name} · ${food.calories} kkal/100 g</option>`).join('');
+        document.querySelector('#today-label').textContent = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+        document.querySelector('#year').textContent = new Date().getFullYear();
+
+        function renderFoodLog() {
+            foodList.replaceChildren();
+            if (!entries.length) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.textContent = 'Belum ada makanan. Tambahkan asupan pertamamu.';
+                foodList.append(empty);
+            } else {
+                entries.forEach((entry, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'food-row';
+                    const name = document.createElement('div');
+                    name.className = 'food-name';
+                    name.append(document.createTextNode(entry.name));
+                    const portion = document.createElement('span');
+                    portion.className = 'food-portion';
+                    portion.textContent = `${entry.grams} g`;
+                    name.append(portion);
+                    const energy = document.createElement('span');
+                    energy.className = 'food-energy';
+                    energy.textContent = `${entry.calories} kkal`;
+                    const remove = document.createElement('button');
+                    remove.className = 'icon-button';
+                    remove.type = 'button';
+                    remove.setAttribute('aria-label', `Hapus ${entry.name}`);
+                    remove.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16m-10 4v6m4-6v6M5 7l1 14h12l1-14M9 7V4h6v3"/></svg>';
+                    remove.addEventListener('click', () => { entries.splice(index, 1); saveFoodLog(); });
+                    row.append(name, energy, remove);
+                    foodList.append(row);
+                });
+            }
+            const total = entries.reduce((sum, entry) => sum + entry.calories, 0);
+            const goal = Math.max(500, Number(goalInput.value) || 2000);
+            const percent = Math.min(100, Math.round((total / goal) * 100));
+            document.querySelector('#calorie-total').textContent = total.toLocaleString('id-ID');
+            document.querySelector('#goal-label').textContent = `dari ${goal.toLocaleString('id-ID')} kkal`;
+            document.querySelector('#progress-fill').style.width = `${percent}%`;
+            document.querySelector('.progress-track').setAttribute('aria-valuenow', String(percent));
+            document.querySelector('#summary-hint').textContent = total === 0 ? 'Tambahkan makanan untuk mulai memantau asupanmu.' : total > goal ? 'Catatan asupanmu sudah melewati target harian.' : `Kamu sudah mencatat ${percent}% dari target harian.`;
+        }
+        function saveFoodLog() {
+            localStorage.setItem(storageKey, JSON.stringify(entries));
+            renderFoodLog();
+        }
+        document.querySelector('#food-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const grams = Number(document.querySelector('#food-grams').value);
+            if (!Number.isFinite(grams) || grams < 1 || grams > 2000) return;
+            const food = foods[Number(foodSelect.value)];
+            entries.push({ name: food.name, grams, calories: Math.round(food.calories * grams / 100) });
+            saveFoodLog();
+        });
+        goalInput.addEventListener('input', renderFoodLog);
+        renderFoodLog();
+
+        const medicineGrid = document.querySelector('#medicine-grid');
+        function renderMedicines(query = '') {
+            const normalized = query.trim().toLocaleLowerCase('id-ID');
+            const matches = medicines.filter((medicine) => `${medicine.name} ${medicine.tag} ${medicine.keywords} ${medicine.description}`.toLocaleLowerCase('id-ID').includes(normalized));
+            medicineGrid.replaceChildren();
+            if (!matches.length) {
+                const empty = document.createElement('div');
+                empty.className = 'medicine-empty';
+                empty.textContent = 'Informasi obat tidak ditemukan. Coba kata kunci lain atau tanyakan kepada apoteker.';
+                medicineGrid.append(empty);
+                return;
+            }
+            matches.forEach((medicine) => {
+                const card = document.createElement('article');
+                card.className = 'medicine-card';
+                const top = document.createElement('div');
+                top.className = 'medicine-card-top';
+                const symbol = document.createElement('span');
+                symbol.className = 'medicine-icon';
+                symbol.innerHTML = icon(iconPaths[medicine.icon]);
+                const tag = document.createElement('span');
+                tag.className = `tag${medicine.type === 'resep' ? ' tag-prescription' : ''}`;
+                tag.textContent = medicine.tag;
+                top.append(symbol, tag);
+                const title = document.createElement('h3');
+                title.textContent = medicine.name;
+                const description = document.createElement('p');
+                description.textContent = medicine.description;
+                card.append(top, title, description);
+                medicineGrid.append(card);
+            });
+        }
+        document.querySelector('#medicine-search').addEventListener('input', (event) => renderMedicines(event.target.value));
+        renderMedicines();
+
+        const articleGrid = document.querySelector('#article-grid');
+        const modal = document.querySelector('#article-modal');
+        const modalClose = document.querySelector('#modal-close');
+        let activeFilter = 'Semua';
+        function showArticle(article) {
+            document.querySelector('#modal-category').textContent = article.category;
+            document.querySelector('#modal-title').textContent = article.title;
+            document.querySelector('#modal-meta').textContent = `${article.read} · Luhur Fit`;
+            const body = document.querySelector('#modal-body');
+            body.replaceChildren(...article.body.map((paragraph) => {
+                const element = document.createElement('p');
+                element.textContent = paragraph;
+                return element;
+            }));
+            modal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            modalClose.focus();
+        }
+        function renderArticles() {
+            const matches = articles.filter((article) => activeFilter === 'Semua' || article.category === activeFilter);
+            articleGrid.replaceChildren();
+            matches.forEach((article) => {
+                const card = document.createElement('article');
+                card.className = 'article-card';
+                const image = document.createElement('img');
+                image.className = 'article-image';
+                image.src = article.image;
+                image.alt = article.alt;
+                image.loading = 'lazy';
+                const copy = document.createElement('div');
+                copy.className = 'article-copy';
+                const meta = document.createElement('div');
+                meta.className = 'article-meta';
+                const category = document.createElement('span');
+                category.textContent = article.category;
+                const readTime = document.createElement('span');
+                readTime.textContent = article.read;
+                meta.append(category, readTime);
+                const title = document.createElement('h3');
+                title.textContent = article.title;
+                const excerpt = document.createElement('p');
+                excerpt.textContent = article.excerpt;
+                const read = document.createElement('button');
+                read.className = 'read-link';
+                read.type = 'button';
+                read.innerHTML = 'Baca artikel <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+                read.addEventListener('click', () => showArticle(article));
+                copy.append(meta, title, excerpt, read);
+                card.append(image, copy);
+                articleGrid.append(card);
+            });
+        }
+        document.querySelectorAll('.filter-button').forEach((button) => {
+            button.addEventListener('click', () => {
+                activeFilter = button.dataset.filter;
+                document.querySelectorAll('.filter-button').forEach((filter) => filter.setAttribute('aria-pressed', String(filter === button)));
+                renderArticles();
+            });
+        });
+        function closeModal() { modal.hidden = true; document.body.style.overflow = ''; }
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.hidden) closeModal();
+        });
+        renderArticles();
+
+        const sections = [...document.querySelectorAll('main section[id]')];
+        const navLinks = [...document.querySelectorAll('.main-nav a')];
+        const sectionObserver = new IntersectionObserver((observations) => {
+            const visible = observations.filter((observation) => observation.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (!visible) return;
+            navLinks.forEach((link) => {
+                if (link.getAttribute('href') === `#${visible.target.id}`) link.setAttribute('aria-current', 'location');
+                else link.removeAttribute('aria-current');
+            });
+        }, { rootMargin: '-22% 0px -62% 0px', threshold: [0, .1, .3] });
+        sections.forEach((section) => sectionObserver.observe(section));
+    </script>
+</body>
+</html>
